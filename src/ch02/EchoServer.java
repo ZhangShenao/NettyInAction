@@ -11,7 +11,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
  * 
- * <p>Description:使用Netty实现的Echo服务器类</p>
+ * <p>Description:使用Netty实现的Echo服务器</p>
  * @author ZhangShenao
  * @date 2017年7月10日
  */
@@ -54,8 +54,7 @@ public class EchoServer {
 			 
 			 //6.将服务器异步绑定到监听端口,并阻塞直到操作完成
 			 ChannelFuture f = b.bind(port).sync();
-			 System.out.println(EchoServer.class.getName() +
-		                " started and listening for connections on " + f.channel().localAddress());
+			 System.err.println("EchoServer 启动并开始监听端口! 地址: " + f.channel().localAddress());
 			 
 			 //7.获取 Channel的CloseFuture，并且阻塞当前线程直到它完成
 			 f.channel().closeFuture().sync();
@@ -66,5 +65,10 @@ public class EchoServer {
 				group.shutdownGracefully();
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		EchoServer server = new EchoServer();
+		server.service(8000);
 	}
 }
