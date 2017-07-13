@@ -42,5 +42,6 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter{
         
         //关闭该Channel
         ctx.close();
+        
 	}
 }
