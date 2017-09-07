@@ -1,7 +1,11 @@
 package ch05;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.util.collection.ShortObjectMap;
+
+import java.nio.ByteBuffer;
 
 /**
  * 
@@ -15,6 +19,10 @@ public class ByteBufExamples {
 	 * 一个ByteBuf实例
 	 */
 	private final static ByteBuf BYTE_BUF_FROM_SOMEWHERE = Unpooled.buffer(1024);
+	
+	public static void main(String[] args) {
+		byteBufComposite();
+	}
 	
 	/**
 	 * 处理数组的业务逻辑方法
@@ -70,4 +78,62 @@ public class ByteBufExamples {
 			handleArray(array, 0, length);
 		}
 	}
+	
+	/**
+	 * 使用JDK提供的ByteBuffer的复合缓冲区模式
+	 * @param header 消息头
+	 * @param body 消息主体
+	 */
+	public static void byteBufferComposite(ByteBuffer header, ByteBuffer body) {
+		//创建一个ByteBuffer数组保存消息头和消息体
+        ByteBuffer[] message =  new ByteBuffer[]{ header, body };
+        
+        //创建另一个ByteBuffer保存这些消息的副本,并将他们合并
+        ByteBuffer message2 =
+                ByteBuffer.allocate(header.remaining() + body.remaining());
+        message2.put(header);
+        message2.put(body);
+        message2.flip();
+    }
+	
+	/**
+	 * 使用CompositeByteBuf的复合缓冲区模式
+	 */
+	public static void byteBufComposite(){
+		//创建CompositeByteBuf复合缓冲区对象
+		CompositeByteBuf compositeBuffer = Unpooled.compositeBuffer();
+		
+		//将ByteBuf实例追加到CompositeByteBuf
+		ByteBuf headerBuf = BYTE_BUF_FROM_SOMEWHERE;
+		ByteBuf bodyBuf = BYTE_BUF_FROM_SOMEWHERE;
+		compositeBuffer.addComponents(headerBuf,bodyBuf);
+		
+		//删除第一个ByteBuf
+		compositeBuffer.removeComponent(0);
+		
+		//遍历CompositeByteBuf组件内的所有ByteBuf实例
+		for (ByteBuf byteBuf : compositeBuffer){
+			System.out.println(byteBuf);
+		}
+	}
+	
+	/**
+	 * 访问CompositeByteBuf中的数据
+	 */
+	public static void byteBufCompositeArray() {
+        CompositeByteBuf compBuf = Unpooled.compositeBuffer();
+        
+        //获得可读字节数
+        int length = compBuf.readableBytes();
+        
+        //分配一个具有可读字节数长度的新数组
+        byte[] array = new byte[length];
+        
+        //将字节读到该数组中
+        compBuf.getBytes(compBuf.readerIndex(), array);
+        
+        //使用偏移量和长度作为参数使用该数组
+        handleArray(array, 0, array.length);
+    }
 }
+
