@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/netty-all-4.1.13.Final-sources.jar"/>
 	<classpathentry kind="lib" path="lib/netty-all-4.1.13.Final.jar" sourcepath="lib/netty-all-4.1.13.Final-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
