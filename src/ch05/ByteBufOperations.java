@@ -1,8 +1,12 @@
 package ch05;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufProcessor;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.nio.charset.Charset;
 import java.util.Random;
@@ -17,6 +21,7 @@ import org.junit.Test;
  */
 public class ByteBufOperations {
 	private static final ByteBuf BYTE_BUF_FROM_SOMEWHERE = Unpooled.buffer(1024);
+	private static final Channel CHANNEL_FROM_SOMEWHERE = new NioSocketChannel();
 	private static final Random random = new Random(47);
 	
 	/**
@@ -162,4 +167,48 @@ public class ByteBufOperations {
 		//write操作成功,会移动writerIndex
 		System.out.println("readerIndex: " + byteBuf.readerIndex() + ", writerIndex: " + byteBuf.writerIndex());
     }
+	
+	/**
+     * 获取一个到 ByteBufAllocator 的引用
+     */
+	@Test
+    public void obtainingByteBufAllocatorReference(){
+        Channel channel = CHANNEL_FROM_SOMEWHERE; 
+        
+        //从 Channel 获取一个到ByteBufAllocator 的引用
+        ByteBufAllocator allocator = channel.alloc();
+    }
+	
+	/**
+	 * 引用计数
+	 */
+	@Test
+	public void referenceCounting(){
+		Channel channel = CHANNEL_FROM_SOMEWHERE;
+		
+		//从Channel中获取ByteBufAllocator
+		ByteBufAllocator allocator = channel.alloc();
+		
+		//从ByteBufAllocator分配一个ByteBuf
+		ByteBuf directBuffer = allocator.directBuffer();
+		
+		//检查引用计数
+		System.out.println(directBuffer.refCnt());
+	}
+	
+	/**
+	 * 释放引用计数的对象
+	 */
+	@Test
+	public void releaseReferenceCountedObject(){
+		ByteBuf byteBuf = BYTE_BUF_FROM_SOMEWHERE;
+		System.out.println(byteBuf.refCnt());
+		
+		//将引用计数+1
+		/*byteBuf.retain();
+		System.out.println(byteBuf.refCnt());*/
+		
+		//减少该对象的活动引用。当引用计数减少到0时,该对象将被释放,并返回true
+		System.out.println(byteBuf.release());
+	}
 }
