@@ -26,7 +26,8 @@ import java.net.URL;
 
 /**
  * 
- * <p>Description: 扩展 SimpleChannelInboundHandler 以处理 FullHttpRequest 消息 </p>
+ * <p>Description: 处理Http请求 </p>
+ * <p>响应普通的Http/s请求,并将WebSocket请求进行协议升级</p>
  * @author ZhangShenao
  * @date 2017年10月24日 下午10:20:26
  */
