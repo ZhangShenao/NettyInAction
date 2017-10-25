@@ -29,7 +29,7 @@ public class ChatServer {
 	
 	private Channel channel;
 	
-	private static final int DEFAULT_PORT = 8000;
+	public static final int DEFAULT_PORT = 8000;
 	
 	/**
 	 * 启动服务器
@@ -61,7 +61,7 @@ public class ChatServer {
 	/**
 	 * 创建ChatServerInitializer
 	 */
-	private ChannelInitializer<Channel> createChildInitializer(ChannelGroup group){
+	protected ChannelInitializer<Channel> createChildInitializer(ChannelGroup group){
 		return new ChatServerInitializer(group);
 	}
 	
