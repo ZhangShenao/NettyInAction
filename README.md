@@ -1,2 +1,2 @@
 # NettyInAction
-学习《Netty实战》一书，进行代码实现
+学习 Netty,并进行一些代码实现。
